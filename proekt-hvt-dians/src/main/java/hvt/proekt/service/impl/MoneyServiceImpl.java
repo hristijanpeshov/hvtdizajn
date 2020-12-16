@@ -6,6 +6,7 @@ import hvt.proekt.repository.MoneyObjectRepository;
 import hvt.proekt.service.MoneyService;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +22,13 @@ public class MoneyServiceImpl implements MoneyService {
 
 
     @Override
-    public List<MoneyObject> listAll() {
+    public List<MoneyObject> listAll() throws FileNotFoundException {
         return repository.findAll();
     }
 
 
     @Override
-    public List<MoneyObject> listObjectByType(String type) {
+    public List<MoneyObject> listObjectByType(String type) throws FileNotFoundException {
         if(type.equals(Type.BANK.toString().toLowerCase()))
             return repository.findObjectsByType(Type.BANK);
         else if(type.equals(Type.ATM.toString().toLowerCase())){
@@ -37,7 +38,7 @@ public class MoneyServiceImpl implements MoneyService {
     }
 
     @Override
-    public Optional<MoneyObject> findObjectById(long id) {
+    public Optional<MoneyObject> findObjectById(long id) throws FileNotFoundException {
         return repository.findObjectById(id);
     }
 }
