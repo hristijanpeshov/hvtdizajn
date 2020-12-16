@@ -5,6 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.io.FileNotFoundException;
 
 @Controller
 @RequestMapping("/search")
@@ -17,9 +20,14 @@ public class SearchController {
     }
 
     @PostMapping
-    public String search(String search, Model model){
+    public String search(@RequestParam(required = false) String object, String search, Model model){
         if(search!= null && !search.isEmpty()){
-            model.addAttribute("moneyObjects", searchService.findAllObjects(search));
+            try {
+                model.addAttribute("moneyObjects", searchService.findAllObjects(search, object));
+                model.addAttribute("type", object);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return "objects";
     }

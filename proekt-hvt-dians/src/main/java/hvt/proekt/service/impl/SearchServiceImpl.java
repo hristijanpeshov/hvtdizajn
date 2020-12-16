@@ -6,6 +6,7 @@ import hvt.proekt.repository.MoneyObjectRepository;
 import hvt.proekt.service.SearchService;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @Service
@@ -18,12 +19,12 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<MoneyObject> findAllObjects(String name) {
-        return repository.findObjectByName(name);
+    public List<MoneyObject> findAllObjects(String name, String type) throws FileNotFoundException {
+        return repository.findObjectByName(name, type);
     }
 
     @Override
-    public List<MoneyObject> findNClosest(int n) {
+    public List<MoneyObject> findNClosest(int n) throws FileNotFoundException {
         return repository.findObjectByCloseness(n);
     }
 }

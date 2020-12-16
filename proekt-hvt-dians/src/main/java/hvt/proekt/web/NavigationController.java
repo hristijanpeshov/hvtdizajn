@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.FileNotFoundException;
+
 @Controller
 @RequestMapping("/navigate")
 public class NavigationController {
@@ -25,10 +27,19 @@ public class NavigationController {
     @GetMapping("/objects")
     public String getAllObjects(@RequestParam(required = false) String object , Model model){
         if(object != null && !object.isEmpty()){
-            model.addAttribute("moneyObjects", moneyService.listObjectByType(object));
+            model.addAttribute("type", object);
+            try {
+                model.addAttribute("moneyObjects", moneyService.listObjectByType(object));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         else {
-            model.addAttribute("moneyObjects", moneyService.listAll());
+            try {
+                model.addAttribute("moneyObjects", moneyService.listAll());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return "objects";
     }
