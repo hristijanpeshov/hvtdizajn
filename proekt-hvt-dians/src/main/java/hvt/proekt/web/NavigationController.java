@@ -18,7 +18,7 @@ public class NavigationController {
     }
 
     @GetMapping
-    public String getMapPage(){
+    public String getMapPage(Model model){
         return "map";
     }
 

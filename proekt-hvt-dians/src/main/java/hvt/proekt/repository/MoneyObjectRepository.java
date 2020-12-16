@@ -6,15 +6,18 @@ import hvt.proekt.model.enumeration.Type;
 import org.springframework.stereotype.Repository;
 
 import javax.xml.crypto.Data;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Repository
 public class MoneyObjectRepository {
 
-    public List<MoneyObject> findAll(){
-        return DataHolder.services;
+    public List<MoneyObject> findAll() {
+        return new ArrayList<>(DataHolder.services);
     }
 
     public List<MoneyObject> findObjectsByType(Type type){
