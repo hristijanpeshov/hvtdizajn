@@ -3,34 +3,90 @@ package hvt.proekt.repository;
 import hvt.proekt.model.MoneyObject;
 import hvt.proekt.model.bootstrap.DataHolder;
 import hvt.proekt.model.enumeration.Type;
+import hvt.proekt.model.util.Location;
 import org.springframework.stereotype.Repository;
 
 import javax.xml.crypto.Data;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Repository
 public class MoneyObjectRepository {
 
-    public List<MoneyObject> findAll(){
-        return DataHolder.services;
+    private boolean cachedObjectsFlag = false;
+    private List<MoneyObject> cachedObjects = new ArrayList<>();
+
+    public List<MoneyObject> findAll() throws FileNotFoundException {
+        if(cachedObjectsFlag)
+            return cachedObjects;
+        List<MoneyObject> objects = new ArrayList<>();
+        Scanner scanner = new Scanner(DataHolder.atmFile);
+        read(objects, scanner);
+        scanner = new Scanner(DataHolder.bankFile);
+        read(objects, scanner);
+        scanner = new Scanner(DataHolder.exchangeFile);
+        read(objects, scanner);
+
+        cachedObjectsFlag = true;
+        this.cachedObjects = objects;
+        return objects;
     }
 
-    public List<MoneyObject> findObjectsByType(Type type){
-        return DataHolder.services.stream().filter(s-> s.getType().equals(type)).collect(Collectors.toList());
+    private void read(List<MoneyObject> objects, Scanner scanner) {
+        scanner.nextLine();
+        while (scanner.hasNextLine()){
+            String[] parts = scanner.nextLine().split(",");
+            MoneyObject object = convert(parts);
+            objects.add(object);
+        }
     }
 
-    public Optional<MoneyObject> findObjectById(Long id){
-        return DataHolder.services.stream().filter(o -> o.getId().equals(id)).findFirst();
+    private MoneyObject convert(String[] parts){
+        Long id = Long.valueOf(parts[0]);
+        String type  = parts[1];
+        Type t;
+        if(type.equals("atm"))
+            t = Type.ATM;
+        else if (type.equals("bank"))
+            t = Type.BANK;
+        else t = Type.EXCHANGE;
+        double lat = Double.parseDouble(parts[2]);
+        double lon = Double.parseDouble(parts[3]);
+        String name = parts[4];
+
+        Location loc = new Location(lat, lon);
+        return new MoneyObject(id, t, loc, name);
     }
 
-    public List<MoneyObject> findObjectByName(String name){
-        return DataHolder.services.stream().filter(s-> s.getName().contains(name)).collect(Collectors.toList());
+    public List<MoneyObject> init() throws FileNotFoundException {
+        return findAll();
     }
 
-    public List<MoneyObject> findObjectByCloseness(int n){
-        return DataHolder.services;
+    public List<MoneyObject> findObjectsByType(Type type) throws FileNotFoundException {
+        List<MoneyObject> objects = init();
+        return objects.stream().filter(s-> s.getType().equals(type)).collect(Collectors.toList());
+    }
+
+    public Optional<MoneyObject> findObjectById(Long id) throws FileNotFoundException {
+        List<MoneyObject> objects = init();
+        return objects.stream().filter(o -> o.getId().equals(id)).findFirst();
+    }
+
+    public List<MoneyObject> findObjectByName(String name, String type) throws FileNotFoundException {
+        List<MoneyObject> objects = init();
+        return objects.stream().filter(s-> s.getName().contains(name) && s.getType().toString().equals(type.toUpperCase()))
+                .collect(Collectors.toList());
+    }
+
+
+    public List<MoneyObject> findObjectByCloseness(int n) throws FileNotFoundException {
+        return init();
     }
 
 }
