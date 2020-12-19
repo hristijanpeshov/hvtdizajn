@@ -49,4 +49,13 @@ public class MoneyObject {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        if(Type.EXCHANGE.equals(type))
+        {
+            return String.format("%d,bureau_de_change,%f,%f,%s",id,coordinates.getX(),coordinates.getY(),name);
+        }
+        return String.format("%d,%s,%f,%f,%s",id,type.toString().toLowerCase(),coordinates.getX(),coordinates.getY(),name);
+    }
 }

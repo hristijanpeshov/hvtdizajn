@@ -3,6 +3,7 @@ package hvt.proekt.service;
 
 import hvt.proekt.model.MoneyObject;
 import hvt.proekt.model.WrapperMoneyObject;
+import hvt.proekt.model.enumeration.Type;
 import hvt.proekt.model.util.Location;
 
 import java.io.FileNotFoundException;
@@ -15,4 +16,5 @@ public interface MoneyService {
 //    List<WrapperMoneyObject> listObjectByType(String type, Location current) throws FileNotFoundException;
 
     Optional<MoneyObject> findObjectById(long id) throws FileNotFoundException;
+    void save(String name, Type type, double lat, double lon);
 }

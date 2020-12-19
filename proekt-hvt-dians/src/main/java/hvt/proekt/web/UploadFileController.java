@@ -12,11 +12,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/upload")
-public class UploadXmlFileController {
+public class UploadFileController {
     private final AdminService adminService;
 
     @Autowired
-    public UploadXmlFileController(AdminService adminService) {
+    public UploadFileController(AdminService adminService) {
         this.adminService = adminService;
     }
 
@@ -24,7 +24,7 @@ public class UploadXmlFileController {
     @GetMapping
     public String UploadFile()
     {
-        return "/UploadFile.html";
+        return "UploadFile";
     }
 
     @PostMapping("")
@@ -33,6 +33,6 @@ public class UploadXmlFileController {
 
         adminService.store(file);
 
-        return "redirect:/";
+        return "redirect:/upload";
     }
 }

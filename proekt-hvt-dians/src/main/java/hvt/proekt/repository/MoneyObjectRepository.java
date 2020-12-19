@@ -4,16 +4,11 @@ import hvt.proekt.model.MoneyObject;
 import hvt.proekt.model.bootstrap.DataHolder;
 import hvt.proekt.model.enumeration.Type;
 import hvt.proekt.model.util.Location;
+import org.apache.logging.log4j.util.PropertySource;
 import org.springframework.stereotype.Repository;
 
-import javax.xml.crypto.Data;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -85,6 +80,36 @@ public class MoneyObjectRepository {
         List<MoneyObject> objects = init();
         return objects.stream().filter(s-> s.getName().toLowerCase().contains(name.toLowerCase()) && s.getType().toString().equals(type.toUpperCase()))
                 .collect(Collectors.toList());
+    }
+    public void save(MoneyObject object)
+    {
+        Comparator<MoneyObject> comparator = Comparator.comparing(MoneyObject::getId);
+        try {
+            Long id = findAll().stream().max(comparator).get().getId();
+            object.setId(id+1);
+            File f = null;
+            if(object.getType().equals(Type.ATM))
+            {
+                f = DataHolder.atmFile;
+            }
+            else if (object.getType().equals(Type.BANK)){
+                f = DataHolder.bankFile;
+            }
+            else
+            {
+                f = DataHolder.exchangeFile;
+            }
+
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
+            pw.println(object.toString());
+            pw.flush();
+            pw.close();
+            cachedObjectsFlag=false;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
