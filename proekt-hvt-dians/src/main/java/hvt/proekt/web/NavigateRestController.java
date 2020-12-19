@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,6 +22,12 @@ public class NavigateRestController {
 
     @GetMapping
     public List<MoneyObject> findAll(){
-        return this.moneyService.listAll();
+        //TODO: Da se dodade handlanje na exception so hasError
+        try {
+            return this.moneyService.listAll();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }

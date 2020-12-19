@@ -1,5 +1,6 @@
 package hvt.proekt.web;
 
+import hvt.proekt.model.util.Location;
 import hvt.proekt.service.MoneyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,18 +29,6 @@ public class NavigationController {
     public String getAllObjects(@RequestParam(required = false) String object , Model model){
         if(object != null && !object.isEmpty()){
             model.addAttribute("type", object);
-            try {
-                model.addAttribute("moneyObjects", moneyService.listObjectByType(object));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-            try {
-                model.addAttribute("moneyObjects", moneyService.listAll());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
         }
         return "objects";
     }

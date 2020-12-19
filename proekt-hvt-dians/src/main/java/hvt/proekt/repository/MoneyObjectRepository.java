@@ -26,6 +26,7 @@ public class MoneyObjectRepository {
         if(cachedObjectsFlag)
             return cachedObjects;
         List<MoneyObject> objects = new ArrayList<>();
+
         Scanner scanner = new Scanner(DataHolder.atmFile);
         read(objects, scanner);
         scanner = new Scanner(DataHolder.bankFile);
@@ -65,6 +66,8 @@ public class MoneyObjectRepository {
     }
 
     public List<MoneyObject> init() throws FileNotFoundException {
+        if(cachedObjectsFlag)
+            return cachedObjects;
         return findAll();
     }
 
@@ -78,15 +81,10 @@ public class MoneyObjectRepository {
         return objects.stream().filter(o -> o.getId().equals(id)).findFirst();
     }
 
-    public List<MoneyObject> findObjectByName(String name, String type) throws FileNotFoundException {
+    public List<MoneyObject> findObjectByNameAndType(String name, String type) throws FileNotFoundException {
         List<MoneyObject> objects = init();
-        return objects.stream().filter(s-> s.getName().contains(name) && s.getType().toString().equals(type.toUpperCase()))
+        return objects.stream().filter(s-> s.getName().toLowerCase().contains(name.toLowerCase()) && s.getType().toString().equals(type.toUpperCase()))
                 .collect(Collectors.toList());
-    }
-
-
-    public List<MoneyObject> findObjectByCloseness(int n) throws FileNotFoundException {
-        return init();
     }
 
 }
