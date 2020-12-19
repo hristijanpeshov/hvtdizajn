@@ -13,9 +13,9 @@ import java.util.List;
 @Component
 @Getter
 public class DataHolder {
-    public static File atmFile = new File("C:\\Users\\Hristijan\\IdeaProjects\\proekt-hvt-dians\\src\\main\\java\\hvt\\proekt\\model\\bootstrap\\db\\atm.csv");
-    public static File bankFile = new File("C:\\Users\\Hristijan\\IdeaProjects\\proekt-hvt-dians\\src\\main\\java\\hvt\\proekt\\model\\bootstrap\\db\\bank.csv");;
-    public static File exchangeFile = new File("C:\\Users\\Hristijan\\IdeaProjects\\proekt-hvt-dians\\src\\main\\java\\hvt\\proekt\\model\\bootstrap\\db\\exchange.csv");;
+    public static File atmFile = new File("src/main/java/hvt/proekt/model/bootstrap/db/atm.csv");
+    public static File bankFile = new File("src/main/java/hvt/proekt/model/bootstrap/db/bank.csv");;
+    public static File exchangeFile = new File("src/main/java/hvt/proekt/model/bootstrap/db/exchange.csv");;
 
 //    @PostConstruct
 //    public void init(){
