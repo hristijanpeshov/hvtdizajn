@@ -19,17 +19,12 @@ public class SearchController {
         this.searchService = searchService;
     }
 
-    @PostMapping
-    public String search(@RequestParam(required = false) String object, String search, Model model){
-        if(search!= null && !search.isEmpty()){
-            try {
-                model.addAttribute("moneyObjects", searchService.findAllObjects(search, object));
-                model.addAttribute("type", object);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return "objects";
-    }
+//    @PostMapping
+//    public String search(@RequestParam(required = false) String object, String search, Model model){
+//        if(search!= null && !search.isEmpty()){
+//            model.addAttribute("type", object);
+//        }
+//        return "objects";
+//    }
 
 }

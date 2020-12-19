@@ -2,7 +2,9 @@ package hvt.proekt.web;
 
 import hvt.proekt.model.MoneyObject;
 import hvt.proekt.service.MoneyService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +30,23 @@ public class NavigateRestController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return new ArrayList<MoneyObject>();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MoneyObject> findById(@PathVariable Long id){
+        try {
+            return this.moneyService
+                    .findObjectById(id)
+                    .map(moneyObject -> ResponseEntity
+                            .ok()
+                            .body(moneyObject))
+                    .orElseGet(() -> ResponseEntity
+                            .notFound()
+                            .build());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

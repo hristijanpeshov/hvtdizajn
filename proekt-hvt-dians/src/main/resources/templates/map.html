@@ -72,7 +72,49 @@
 
 <script>
     var mymap = L.map('mapid');
-    var zoom = 14
+    var zoom = 14;
+    var routingControl = L.routing.control({
+        routeWhileDragging: true,
+        draggableWaypoints: false,
+        addWaypoints: false,
+        createMarker: function (i, waypoint, n) {
+            var marker_icon = destinationIcon
+            var marker;
+            console.log(waypoint);
+            if(i==n-1){
+                marker = L.marker(waypoint.latLng, {
+                    draggable: false,
+                    bounceOnAdd: false,
+                    bounceOnAddOptions: {
+                        duration: 1000,
+                        height: 800,
+                    },
+                    icon: marker_icon
+                }).bindPopup("<div class='text-center p-1'><div>" + waypoint.name + "</div></div>");
+            }
+            return marker;
+        }
+    }).addTo(mymap);
+
+    var destinationIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var startIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    const queryString = new URLSearchParams(window.location.search);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -90,9 +132,8 @@
                 for(var i=0;i<result.length;i++){
                     var x = result[i].coordinates.x;
                     var y = result[i].coordinates.y;
-                    var marker = L.marker([y, x]).bindPopup(result[i].name + "</br>" + result[i].type).addTo(mymap);
+                    var marker = L.marker([y, x]).bindPopup("<div class='text-center p-1'><div>" + result[i].name + "</div></br><div>" + result[i].type + "</div></br><button type='button' class='btn btn-primary btn-go' onclick='getRoute(this)' data='" + result[i].id +"'>Go</button></div>").addTo(mymap);
                 }
-
             }
         });
     }
@@ -112,17 +153,29 @@
         mymap.setView([position.coords.latitude,position.coords.longitude],zoom)
         myCoords = [position.coords.latitude,position.coords.longitude]
 
+        if(queryString.has('id')){
+            var paramId = queryString.get('id');
+            route(paramId);
+        }
+        L.marker([myCoords[0],myCoords[1]], { icon: startIcon}).bindPopup("My Location").addTo(mymap);
+    }
 
-        L.Routing.control({
-            waypoints: [
-                L.latLng(myCoords[0],myCoords[1]),
-                L.latLng(41.9921343, 21.4266335)
-            ],
-            routeWhileDragging: true,
-            draggableWaypoints: false,
-            addWaypoints: false
-        }).addTo(mymap);
-        L.marker([myCoords[0],myCoords[1]]).bindPopup("My Location").addTo(mymap);
+    function getRoute(item){
+        var objectId = item.getAttribute("data");
+        mymap.closePopup();
+        route(objectId);
+    }
+
+
+    function route(idParam){
+        $.ajax({
+            url: '/api/markers/' + idParam,
+            success: function(result){
+                routingControl.getPlan().setWaypoints([
+                    L.Routing.waypoint(L.latLng(myCoords[0],myCoords[1])),
+                    L.Routing.waypoint(L.latLng(result.coordinates.y, result.coordinates.x), '<div>' + result.name + '</div></br><div>' + result.type + '</div>')]);
+            }
+        })
     }
 
 </script>
