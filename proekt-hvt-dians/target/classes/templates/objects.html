@@ -10,6 +10,9 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
         <style>
             .hoverable:hover{
                 cursor: pointer;
@@ -46,46 +49,44 @@
                 </li>
             </ul>
 
-            <form method="post" action="/search" class="form-inline my-2 my-lg-0">
+            <div class="inline my-2 my-lg-0">
+
+
                 <div class="input-group input-group-sm">
                     <input type="hidden" name="object" id="object" th:value="${type}">
                     <input type="text" name="search" id="search" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
-                           placeholder="Search...">
+                           placeholder="Search..." onkeypress="handle(event)">
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-secondary btn-number">
+                        <button class="btn btn-secondary btn-number" onclick="getLocation('search')">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </nav>
 <div class="container md-5">
-
+    <button class="btn btn-primary mt-10 md-10" onclick="getLocation('topTen')">Closest 10</button>
     <div class="row">
-        <div class="col-12" th:if="${moneyObjects.size() > 0}">
+        <div class="col-12" >
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="col">
+                        <th scope="col-6">
                             Name
                         </th>
-                        <th scope="col">
+                        <th scope="col-3">
                             Type
                         </th>
-                        <th scope="col">
-                            Distance
+                        <th scope="col-3">
+                            Distance in meters
                         </th>
                     </tr>
                     </thead>
-                    <tbody>
-                        <tr class="hoverable" th:each="object : ${moneyObjects}" onclick="redmap(this)" th:attr="data-id=${object.getId()},data-type=${object.getType()}">
-                            <td th:text="${object.getName()}"></td>
-                            <td th:text="${object.getType().toString()}"></td>
-                            <td th:text="25km"></td>
-                        </tr>
+                    <tbody id="t-body">
+
                     </tbody>
                 </table>
             </div>
@@ -101,5 +102,75 @@
         var type = item.getAttribute('data-type');
         location.href = '/navigate?id=' + id + "&type=" + type;
     }
+
+
+    function listTable(result) {
+        console.log(result.length)
+        document.getElementById("t-body").innerHTML = "";
+        for (var i = 0; i < result.length; i++) {
+            var tr = document.createElement("tr");
+            tr.setAttribute("class", "hoverable")
+            tr.setAttribute("onClick", "redmap(this)")
+            tr.setAttribute("data-id", result[i].moneyObject.id);
+            tr.setAttribute("data-type", result[i].moneyObject.type);
+            var name = document.createElement("td");
+            name.innerHTML = result[i].moneyObject.name;
+            tr.appendChild(name);
+
+            var type = document.createElement("td");
+            type.innerHTML = result[i].moneyObject.type;
+            tr.appendChild(type);
+
+            var dist = document.createElement("td");
+            dist.innerHTML = result[i].distance;
+            tr.appendChild(dist);
+            document.getElementById("t-body").appendChild(tr);
+
+        }
+    }
+
+    function handle(e){
+        if(e.keyCode === 13){
+            getLocation("search"); // Ensure it is only this code that runs
+        }
+    }
+
+    function topTen(position){
+        $.ajax({
+            url: '/api/search/topTen',
+            type: "POST",
+            data: jQuery.param({ object: $('#object').val() ,lat: position.coords.latitude, lon : position.coords.longitude, search: $('#search').val()}),
+            success: function(result){
+                    listTable(result);
+                }
+        })
+    }
+
+    getLocation("search")
+    function getLocation(t) {
+        if (navigator.geolocation) {
+            if(t=="search")
+                navigator.geolocation.getCurrentPosition(ajaxCall)
+            if(t=="topTen")
+                navigator.geolocation.getCurrentPosition(topTen)
+        } else {
+            mymap.setView([41.9936657, 21.4428736],zoom)
+        }
+    }
+
+    function ajaxCall(position){
+        $.ajax({
+            url: '/api/search',
+            type: "POST",
+            data: jQuery.param({ object: $('#object').val() ,lat: position.coords.latitude, lon : position.coords.longitude, search: $('#search').val()}),
+            success: function(result){
+               listTable(result);
+            }
+        })
+    }
+
+
+
+
 
 </script>
