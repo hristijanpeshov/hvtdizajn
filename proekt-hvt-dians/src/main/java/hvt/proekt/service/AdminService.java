@@ -7,4 +7,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AdminService {
     void store(MultipartFile file);
     void updateDB();
+    boolean auth(String password);
 }

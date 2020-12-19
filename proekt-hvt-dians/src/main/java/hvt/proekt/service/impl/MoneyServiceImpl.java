@@ -31,6 +31,10 @@ public class MoneyServiceImpl implements MoneyService {
         return repository.findAll();
     }
 
+    public void save(String name,Type type,double lat,double lon)
+    {
+        repository.save(new MoneyObject(-1L,type,new Location(lat,lon),name));
+    }
 
 //    @Override
 //    public List<WrapperMoneyObject> listObjectByType(String type, Location current) throws FileNotFoundException {

@@ -24,4 +24,9 @@ public class AdminServiceImpl implements AdminService {
     public void updateDB() {
 
     }
+
+    @Override
+    public boolean auth(String password) {
+        return password.equals("admin");
+    }
 }
