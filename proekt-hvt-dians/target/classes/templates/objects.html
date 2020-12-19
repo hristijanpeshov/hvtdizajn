@@ -7,11 +7,6 @@
         <meta charset="UTF-8"/>
         <title>Products</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <style>
             .hoverable:hover{
@@ -67,20 +62,28 @@
     </div>
 </nav>
 <div class="container md-5">
-    <button class="btn btn-primary mt-10 md-10" onclick="getLocation('topTen')">Closest 10</button>
+
+    <div class="row mt-2">
+        <div class="col text-left">
+            <h2 class="text-dark" th:text="${type.toUpperCase()}"></h2>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary mt-2 text-right" onclick="getLocation('topTen')">Closest 10</button>
+        </div>
+
+    </div>
+
     <div class="row">
         <div class="col-12" >
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="col-6">
+                        <th scope="col">
                             Name
                         </th>
-                        <th scope="col-3">
-                            Type
-                        </th>
-                        <th scope="col-3">
+
+                        <th scope="col">
                             Distance in meters
                         </th>
                     </tr>
@@ -92,9 +95,18 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <p id="errorFile" class="text-danger"></p>
+    </div>
 </div>
 </body>
 </html>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
     function redmap(item){
@@ -104,7 +116,13 @@
     }
 
 
-    function listTable(result) {
+    function listTable(result, show) {
+        console.log(result);
+
+        if(result == '') {
+            document.getElementById('errorFile').innerHTML = "This service is not available at the moment. Please try again later.";
+            return;
+        }
         console.log(result.length)
         document.getElementById("t-body").innerHTML = "";
         for (var i = 0; i < result.length; i++) {
@@ -117,12 +135,14 @@
             name.innerHTML = result[i].moneyObject.name;
             tr.appendChild(name);
 
-            var type = document.createElement("td");
-            type.innerHTML = result[i].moneyObject.type;
-            tr.appendChild(type);
+            // var type = document.createElement("td");
+            // type.innerHTML = result[i].moneyObject.type;
+            // tr.appendChild(type);
 
             var dist = document.createElement("td");
-            dist.innerHTML = result[i].distance;
+            if(show)
+                dist.innerHTML = '-';
+            else dist.innerHTML = result[i].distance;
             tr.appendChild(dist);
             document.getElementById("t-body").appendChild(tr);
 
@@ -141,8 +161,19 @@
             type: "POST",
             data: jQuery.param({ object: $('#object').val() ,lat: position.coords.latitude, lon : position.coords.longitude, search: $('#search').val()}),
             success: function(result){
-                    listTable(result);
+                    listTable(result, false);
                 }
+        })
+    }
+
+    function fail(){
+        $.ajax({
+            url: '/api/search/locationDenied',
+            type: "POST",
+            data: jQuery.param({ object: $('#object').val() , search: $('#search').val()}),
+            success: function(result){
+                listTable(result, true);
+            }
         })
     }
 
@@ -150,11 +181,10 @@
     function getLocation(t) {
         if (navigator.geolocation) {
             if(t=="search")
-                navigator.geolocation.getCurrentPosition(ajaxCall)
+                navigator.geolocation.getCurrentPosition(ajaxCall, fail)
             if(t=="topTen")
-                navigator.geolocation.getCurrentPosition(topTen)
-        } else {
-            mymap.setView([41.9936657, 21.4428736],zoom)
+                navigator.geolocation.getCurrentPosition(topTen, fail)
+
         }
     }
 
@@ -164,7 +194,7 @@
             type: "POST",
             data: jQuery.param({ object: $('#object').val() ,lat: position.coords.latitude, lon : position.coords.longitude, search: $('#search').val()}),
             success: function(result){
-               listTable(result);
+               listTable(result, false);
             }
         })
     }

@@ -33,8 +33,9 @@ public class SearchRestController {
             return searchService.findAllObjects(search, object, new Location(lat, lon));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return null;
         }
-        return new ArrayList<>();
+
     }
 
     @PostMapping("/topTen")
@@ -43,8 +44,18 @@ public class SearchRestController {
             return searchService.findNClosest(search, object, new Location(lat, lon), 10);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return null;
         }
-        return new ArrayList<>();
+    }
+
+    @PostMapping("/locationDenied")
+    List<WrapperMoneyObject> fail(@RequestParam String object, @RequestParam(required = false) String search){
+        try {
+            return searchService.findAllObjects(search, object, new Location(22.12, 44.23));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
