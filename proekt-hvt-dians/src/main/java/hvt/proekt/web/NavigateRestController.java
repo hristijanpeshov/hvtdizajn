@@ -30,7 +30,7 @@ public class NavigateRestController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return new ArrayList<MoneyObject>();
+        return null;
     }
 
     @GetMapping("/{id}")
