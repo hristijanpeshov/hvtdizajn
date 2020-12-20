@@ -46,16 +46,16 @@
             <div class="table-responsive">
                 <form action="/admin/create" method="POST">
                     <div class="form-group">
-                        <label for="name">Product name</label>
+                        <label for="name">Object name</label>
                         <input
                                 type="text"
                                 class="form-control"
                                 id="name"
-                                value="" required placeholder="Enter product name"
+                                value="" required placeholder="Enter name"
                                 name="name">
                     </div>
                     <div class="form-group">
-                        <label>Category</label>
+                        <label>Type</label>
                         <select name="type">
                             <option th:each="state : ${T(hvt.proekt.model.enumeration.Type).values()}"
                                     th:value="${state}"
@@ -65,23 +65,23 @@
 
                     </div>
                     <div class="form-group">
-                        <label for="lon">Price</label>
+                        <label for="lon">Longitude</label>
                         <input
                                 type="text"
                                 class="form-control"
                                 id="lon"
                                 value=""
-                                required placeholder="Enter price"
+                                required placeholder="Enter longitude"
                                 name="lon">
                     </div>
                     <div class="form-group">
-                        <label for="lat">Quantity</label>
+                        <label for="lat">Latitude</label>
                         <input
                                 type="text"
                                 class="form-control"
                                 id="lat"
                                 value=""
-                                required placeholder="Enter quantity"
+                                required placeholder="Enter latitude"
                                 name="lat">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>

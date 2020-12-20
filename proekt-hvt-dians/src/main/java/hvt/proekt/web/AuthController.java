@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.StringBufferInputStream;
 
 @Controller
 @RequestMapping("/login")
@@ -28,6 +29,12 @@ public class AuthController {
             request.getSession().setAttribute("auth",true);
             return "redirect:/admin";
         }
+        return "redirect:/login";
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request)
+    {
+        request.getSession().invalidate();
         return "redirect:/login";
     }
 }
