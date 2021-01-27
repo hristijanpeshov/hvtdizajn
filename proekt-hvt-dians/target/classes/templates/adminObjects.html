@@ -37,6 +37,11 @@
                     <a class="nav-link active" href="/navigate/objects?object=exchange">Money Exchange</a>
                 </li>
             </ul>
+            <ul sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-nav m-auto">
+                <li class="nav-item m-auto">
+                    <a class="nav-link active" href="/admin">Admin Page</a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -46,7 +51,7 @@
             <a class="btn btn-primary" href="/admin/create">Add new Object</a>
         </div>
         <div class="text-right col mt-2 mb-2">
-            <a class="btn btn-primary" href="/login/logout">Logout</a>
+            <a class="btn btn-primary" href="/logout">Logout</a>
         </div>
     </div>
     <div class="row">

@@ -2,11 +2,9 @@ package hvt.proekt.service.impl;
 
 
 import hvt.proekt.model.MoneyObject;
-import hvt.proekt.model.WrapperMoneyObject;
-import hvt.proekt.model.enumeration.Type;
+import hvt.proekt.model.MoneyObjectDecorator;
 import hvt.proekt.model.util.Location;
 import hvt.proekt.repository.MoneyObjectRepository;
-import hvt.proekt.service.MoneyService;
 import hvt.proekt.service.SearchService;
 import org.springframework.stereotype.Service;
 
@@ -20,35 +18,48 @@ import java.util.stream.Collectors;
 public class SearchServiceImpl implements SearchService {
 
     private final MoneyObjectRepository repository;
-    private final MoneyService moneyService;
 
 
-    public SearchServiceImpl(MoneyObjectRepository repository, MoneyService moneyService) {
+    public SearchServiceImpl(MoneyObjectRepository repository) {
         this.repository = repository;
-        this.moneyService = moneyService;
     }
 
+    // gi naogja site objekti i ja presmetuva oddalecenosta na objektite do momentalnata lokacija na korisnikot
+    //vlezni argumenti: ime na objekt, tip na objekt, lokacija na korisnikot
+    //imeto i tipot na objektot moze da se prazni stringovi
     @Override
-    public List<WrapperMoneyObject> findAllObjects(String name, String type, Location current) throws FileNotFoundException {
-        //TODO: koristi go findObjectByName a ne type, i streamot za filtrer da bide vo repository
+    public List<MoneyObjectDecorator> findAllObjects(String name, String type, Location current) throws FileNotFoundException {
+
         List<MoneyObject> objects = repository.findObjectByNameAndType(name, type);
-        List<WrapperMoneyObject> wrappers = new ArrayList<>();
+        List<MoneyObjectDecorator> decorators = new ArrayList<>();
+
         objects.forEach(s-> {
-            WrapperMoneyObject tmp = new WrapperMoneyObject(s);
-            tmp.setDistance(calculateDistance(s.getCoordinates().getY(), s.getCoordinates().getX(), current.getY(), current.getX()));
-            wrappers.add(tmp);
+            decorators.add(wrapObject(s, current));
         });
-        Comparator<WrapperMoneyObject> comparator = Comparator.comparing(WrapperMoneyObject::getDistance);
-        return wrappers.stream().sorted(comparator).collect(Collectors.toList());
+
+        Comparator<MoneyObjectDecorator> comparator = Comparator.comparing(MoneyObjectDecorator::getDistance);
+        return decorators.stream().sorted(comparator).collect(Collectors.toList());
     }
 
+    //go obvitkuva objektot so koristenje na klasata MoneyObjectDecorator
+    //vlezni argumenti: MoneyObject, Location na korisnikot
+    //izlezen argument: MoneyObjectDecorator vo koj e presmetano rastojanieto do korisnikot
+    private MoneyObjectDecorator wrapObject(MoneyObject moneyObject, Location current){
+        MoneyObjectDecorator wrapperMoneyObject = new MoneyObjectDecorator(moneyObject);
+        wrapperMoneyObject.setDistance(calculateDistance(moneyObject.getCoordinates().getY(), moneyObject.getCoordinates().getX(), current.getY(), current.getX()));
+        return wrapperMoneyObject;
+    }
+
+    //slicen na prethodniot samo sto ima ogranicuvanje na brojot na objekti koi ke gi vrati
     @Override
-    public List<WrapperMoneyObject> findNClosest(String name, String type, Location current, int n) throws FileNotFoundException {
+    public List<MoneyObjectDecorator> findNClosest(String name, String type, Location current, int n) throws FileNotFoundException {
         return findAllObjects(name, type, current).stream().limit(n).collect(Collectors.toList());
     }
 
+    //algoritam za presmetuvanje na rastojanie pomegju dve koordinati
+    //vlezni argumenti: koordinatite na korisnikot i objektot
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2){
-        double r = 6371*Math.pow(10,3); // metres
+        double r = 6371 * Math.pow(10,3); // metres
         double f1 = lat1 * Math.PI/180; // φ, λ in radians
         double f2 = lat2 * Math.PI/180;
         double distF = (lat2-lat1) * Math.PI/180;
@@ -58,7 +69,6 @@ public class SearchServiceImpl implements SearchService {
                         Math.cos(f1) * Math.cos(f2) *
                                 Math.sin(distLambda/2) * Math.sin(distLambda/2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
         return (int) Math.ceil(r * c);
     }
 }

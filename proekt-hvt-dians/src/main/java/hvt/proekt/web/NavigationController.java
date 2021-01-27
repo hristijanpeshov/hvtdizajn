@@ -11,14 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.FileNotFoundException;
 
 @Controller
-@RequestMapping("/navigate")
+@RequestMapping({"/navigate", "/"})
 public class NavigationController {
 
-    private final MoneyService moneyService;
-
-    public NavigationController(MoneyService moneyService) {
-        this.moneyService = moneyService;
-    }
 
     @GetMapping
     public String getMapPage(){

@@ -29,15 +29,19 @@ public class MoneyObjectCRUDController {
         }
         return "adminObjects";
     }
+
+
     @GetMapping("/create")
     public String newObject()
     {
         return "createObject";
     }
+
+
     @PostMapping("/create")
-    public String save(@RequestParam String name, @RequestParam hvt.proekt.model.enumeration.Type type,@RequestParam Double lon,@RequestParam Double lat)
+    public String save(@RequestParam String name, @RequestParam hvt.proekt.model.enumeration.Type type, @RequestParam Double lon, @RequestParam Double lat)
     {
-        moneyService.save(name,type,lat,lon);
+        moneyService.save(name, type, lat, lon);
         return "redirect:/admin";
     }
 }

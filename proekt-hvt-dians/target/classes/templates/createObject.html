@@ -37,6 +37,11 @@
                     <a class="nav-link active" href="/navigate/objects?object=exchange">Money Exchange</a>
                 </li>
             </ul>
+            <ul sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-nav m-auto">
+                <li class="nav-item m-auto">
+                    <a class="nav-link active" href="/admin">Admin Page</a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -65,16 +70,6 @@
 
                     </div>
                     <div class="form-group">
-                        <label for="lon">Longitude</label>
-                        <input
-                                type="text"
-                                class="form-control"
-                                id="lon"
-                                value=""
-                                required placeholder="Enter longitude"
-                                name="lon">
-                    </div>
-                    <div class="form-group">
                         <label for="lat">Latitude</label>
                         <input
                                 type="text"
@@ -83,6 +78,17 @@
                                 value=""
                                 required placeholder="Enter latitude"
                                 name="lat">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lon">Longitude</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="lon"
+                                value=""
+                                required placeholder="Enter longitude"
+                                name="lon">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <a type="button" class="btn btn-primary" href="/admin">Back</a>

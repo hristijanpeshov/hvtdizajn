@@ -43,6 +43,11 @@
                     <a class="nav-link active" href="/navigate/objects?object=exchange">Money Exchange</a>
                 </li>
             </ul>
+            <ul sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-nav m-auto">
+                <li class="nav-item m-auto">
+                    <a class="nav-link active" href="/admin">Admin Page</a>
+                </li>
+            </ul>
 
             <div class="inline my-2 my-lg-0">
 

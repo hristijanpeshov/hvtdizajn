@@ -18,6 +18,12 @@ public class MoneyObject {
         this.name = name;
     }
 
+    public MoneyObject(Type type, Location coordinates, String name) {
+        this.type = type;
+        this.coordinates = coordinates;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,12 +56,4 @@ public class MoneyObject {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        if(Type.EXCHANGE.equals(type))
-        {
-            return String.format("%d,bureau_de_change,%f,%f,%s",id,coordinates.getX(),coordinates.getY(),name);
-        }
-        return String.format("%d,%s,%f,%f,%s",id,type.toString().toLowerCase(),coordinates.getX(),coordinates.getY(),name);
-    }
 }
