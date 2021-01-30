@@ -7,7 +7,7 @@ import org.springframework.util.MultiValueMap;
 
 public class RequestHelper {
 
-    public static String relativeUrl = "http://MONEY-OBJECT-SERVICE";
+    public static String relativeUrl = "http://money-objects-service:9091";
 
     public static HttpEntity<MultiValueMap<String, Object>> createRequestMap(Object... objects)
     {

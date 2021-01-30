@@ -24,7 +24,7 @@ services:
       - discovery
       - money-objects-service
     ports:
-      - 9092:9092
+      - 80:80
 volumes:
   myapp:
     external: true
