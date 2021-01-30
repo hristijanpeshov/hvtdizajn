@@ -44,4 +44,5 @@ public class MoneyObjectCRUDController {
     {
         moneyService.delete(id);
     }
+
 }

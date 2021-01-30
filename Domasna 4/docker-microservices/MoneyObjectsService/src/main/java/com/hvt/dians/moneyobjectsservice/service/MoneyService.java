@@ -11,8 +11,6 @@ import java.util.Optional;
 public interface MoneyService {
 
     List<MoneyObject> listAll() throws FileNotFoundException;
-//    List<WrapperMoneyObject> listObjectByType(String type, Location current) throws FileNotFoundException;
-
     Optional<MoneyObject> findObjectById(long id) throws FileNotFoundException;
     void save(String name, Type type, double lat, double lon);
     void edit(long id,String name,Type type,double lat,double lon);

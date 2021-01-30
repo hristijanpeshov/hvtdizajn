@@ -21,6 +21,5 @@ public class MainServiceApplication {
     }
 
     @Bean
-    @LoadBalanced()
     public RestTemplate restTemplate(){ return new RestTemplate();}
 }

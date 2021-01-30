@@ -29,9 +29,9 @@ public class DataHolder {
         files = new ArrayList<>();
         moneyObjects = new ArrayList<>();
 
-        files.add(new CSVFileImpl(Type.ATM, "MoneyObjectsService/src/main/java/com/hvt/dians/moneyobjectsservice/model/bootstrap/db/atm.csv"));
-        files.add(new CSVFileImpl(Type.BANK, "MoneyObjectsService/src/main/java/com/hvt/dians/moneyobjectsservice/model/bootstrap/db/bank.csv"));
-        files.add(new CSVFileImpl(Type.EXCHANGE, "MoneyObjectsService/src/main/java/com/hvt/dians/moneyobjectsservice/model/bootstrap/db/exchange.csv"));
+        files.add(new CSVFileImpl(Type.ATM, "/var/lib/docker/volumes/myapp/_data/atm.csv"));
+        files.add(new CSVFileImpl(Type.BANK, "/var/lib/docker/volumes/myapp/_data/bank.csv"));
+        files.add(new CSVFileImpl(Type.EXCHANGE, "/var/lib/docker/volumes/myapp/_data/exchange.csv"));
 
         listAllFromDatabase();
     }

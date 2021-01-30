@@ -12,8 +12,4 @@ public interface SearchService {
     List<MoneyObjectDecorator> findAllObjects(String name, String type, Location current) throws FileNotFoundException;
 
     List<MoneyObjectDecorator> findNClosest(String name, String type, Location current, int n) throws FileNotFoundException;
-
-
-
-
 }

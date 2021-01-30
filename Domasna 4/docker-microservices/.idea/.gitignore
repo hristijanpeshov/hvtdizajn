@@ -2,7 +2,11 @@
 /shelf/
 /workspace.xml
 # Datasource local storage ignored files
+<<<<<<< HEAD
 /../../../../../../:\Users\Viktor\Desktop\Viktor\.idea/dataSources/
+=======
+/../../../../../../:\Users\datah\Desktop\docker-microservices\.idea/dataSources/
+>>>>>>> c7960984592e3c6e9f19d4d3cc59331445aa8c14
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/

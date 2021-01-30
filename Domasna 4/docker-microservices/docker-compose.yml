@@ -1,0 +1,30 @@
+version: '3'
+services:
+  discovery:
+    image: discovery-service.jar
+    ports:
+      - 8761:8761
+  money-objects-service:
+    image: money-objects-service.jar
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery:8761/eureka
+    depends_on:
+      - discovery
+    ports:
+      - 9091:9091
+    volumes:
+      - myapp:/home/data/
+  main-service:
+    image: main-service.jar
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery:8761/eureka
+    depends_on:
+      - discovery
+      - money-objects-service
+    ports:
+      - 9092:9092
+volumes:
+  myapp:
+    external: true

@@ -56,10 +56,12 @@ public class MoneyObjectRepository {
         newObject.setId(generateNextId());
         dataHolder.getMoneyObjects().add(newObject);
     }
+
     public void edit(MoneyObject moneyObject)
     {
         dataHolder.getMoneyObjects().add(moneyObject);
     }
+
     public void remove(MoneyObject moneyObject)
     {
         dataHolder.getMoneyObjects().remove(moneyObject);

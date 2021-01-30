@@ -1,19 +1,13 @@
 package com.hvt.dians.mainservice.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hvt.dians.mainservice.model.MoneyObject;
-import com.hvt.dians.mainservice.model.MoneyObjectDecorator;
-import com.hvt.dians.mainservice.model.MoneyObjectList;
 import com.hvt.dians.mainservice.web.RequestHelper.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/markers")
