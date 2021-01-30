@@ -15,3 +15,5 @@
 
 
 Линк до проектот: https://hvt-dians.herokuapp.com
+
+Линк до Azure Web App: https://hvt-dians.azurewebsites.net
